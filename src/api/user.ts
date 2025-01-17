@@ -32,7 +32,6 @@ export const getUsers = async (): Promise<IUsersResponse> => {
 export const login = async (formdata: ILoginData): Promise<ILoginResponse> => {
     try {
         const response = await axioInstance.post(userAPI.login, formdata);
-        console.log("res ==>", response);
         return response.data;
     } catch (error: any) {
         console.error("Error in login:", error);

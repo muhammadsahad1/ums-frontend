@@ -1,34 +1,32 @@
+"use client"
 import React from "react";
 import { IoLogOut } from "react-icons/io5";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
 import { logout } from "@/api/user";
-// import { useSelector, useDispatch } from "react-redux";
-// import { setAuthenticationStatus, setUserDetails } from "../store/userSlice";
-// import { Link, useNavigate, useLocation } from "react-router-dom";
-// import { userLogout } from "../API/user";
+import { setEmpty } from "@/store/adminSlice";
+import { RootState } from "@/store";
 
 const Navbar = () => {
-    // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    // const user = useSelector(state => state.user);
-    // const dispatch = useDispatch();
-    // const navigate = useNavigate();
-    // const location = useLocation(); // Add this to check current route
-
-    const isLandingPage = location.pathname === '/';
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const admin = useSelector((state: RootState) => state.admin);
 
     const handleLogin = () => {
-        // navigate("/login");
+        router.push("/login"); // Navigate to the login page
     };
 
     const handleLogout = async () => {
         try {
-            const result = await logout();
-            // if (result.message === "Logged out successfully") {
-            //     dispatch(setAuthenticationStatus(false));
-            //     dispatch(setUserDetails({ name: "", email: "" }));
-            //     toast.success(result.message);
-            //     navigate("/login");
-            // }
+            const result = await logout(); // Call the logout API
+            if (result?.status) {
+                toast.success("Logged out successfully");
+                dispatch(setEmpty());
+                router.push("/login");
+            } else {
+                toast.error("Error logging out");
+            }
         } catch (error) {
             console.error("Logout error:", error);
             toast.error("Error logging out");
@@ -36,35 +34,38 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="flex justify-between items-center px-6 py-4 bg-transparent backdrop-blur-sm fixed w-full top-0 left-0 z-10" style={{ height: "60px" }}>
-            <div>
-           
-                    <h1 className="text-2xl font-bold bg-gradient-to-r bg-zinc-950 bg-clip-text text-transparent hover:from-blue-550 transition-all duration-300 cursor-pointer">
-                        ShopAlert
-                    </h1>
-           
-            </div>
-            {/* <div>
-                {isAuthenticated ? (
-                    <div
-                        className="flex items-center text-gray-700 cursor-pointer hover:text-blue-500 transition-colors duration-300"
-                        onClick={handleLogout}
+        <nav
+            className="flex justify-between items-center px-6 py-4 bg-transparent backdrop-blur-sm fixed w-full top-0 left-0 z-10"
+            style={{ height: "60px" }}
+        >
+            <div className="flex justify-between w-full">
+                <div className="ms-32">
+                    <h1
+                        className="text-white text-2xl font-bold cursor-pointer"
+                        onClick={() => router.push("/")}
                     >
-                        <IoLogOut size={24} className="mr-2" />
-                        <span className="font-medium">Logout</span>
-                    </div>
-                ) : (
-                    // Only show login button on landing page
-                    isLandingPage && (
+                        UMS
+                    </h1>
+                </div>
+                <div className="me-32">
+                    {admin._id ? (
+                        <div
+                            className="flex items-center cursor-pointer text-white"
+                            onClick={handleLogout}
+                        >
+                            <IoLogOut size={24} className="mr-2" />
+                            <span className="font-medium">Logout</span>
+                        </div>
+                    ) : (
                         <button
-                            className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-500 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-sm hover:shadow-md"
+                            className="px-6 py-2 text-sm font-medium bg-zinc-900 text-white cursor-pointer rounded-lg transition-all duration-300 shadow-sm"
                             onClick={handleLogin}
                         >
                             Login
                         </button>
-                    )
-                )}
-            </div> */}
+                    )}
+                </div>
+            </div>
         </nav>
     );
 };

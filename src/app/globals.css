@@ -21,7 +21,7 @@ body {
 } */
 
 html, body {
-  @apply bg-zinc-950 text-white; /* Text white for better visibility */
+  @apply bg-black text-white; /* Text white for better visibility */
   height: 100%;
 }
 

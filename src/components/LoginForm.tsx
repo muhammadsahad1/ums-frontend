@@ -3,10 +3,11 @@
 import { login } from "@/api/user";
 import { ILoginData } from "@/types/user";
 import { validation } from "@/utils/validation";
-import Link from "next/link";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from 'next/navigation'
+import { useDispatch } from "react-redux";
+import { setAdminDetails } from "@/store/adminSlice";
 
 const LoginForm: React.FC = () => {
     const [formData, setFormData] = useState<ILoginData>({
@@ -20,6 +21,7 @@ const LoginForm: React.FC = () => {
     });
 
     const router = useRouter()
+    const dispatch = useDispatch()
     const [isLoading, setLoading] = useState(false)
 
     const userValidation = validation();
@@ -70,6 +72,7 @@ const LoginForm: React.FC = () => {
                 const result = await login(formData);
                 console.log(result)
                 if (result.status) {
+                    dispatch(setAdminDetails(result.data))
                     toast.success("Welcome back, Admin! You are now logged in.")
                     router.push('/dashboard')
                 } else {
