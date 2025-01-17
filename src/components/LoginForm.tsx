@@ -6,6 +6,7 @@ import { validation } from "@/utils/validation";
 import Link from "next/link";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from 'next/navigation'
 
 const LoginForm: React.FC = () => {
     const [formData, setFormData] = useState<ILoginData>({
@@ -18,8 +19,10 @@ const LoginForm: React.FC = () => {
         password: ""
     });
 
+    const router = useRouter()
     const [isLoading, setLoading] = useState(false)
 
+    const userValidation = validation();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -46,7 +49,7 @@ const LoginForm: React.FC = () => {
         if (!formData.email) {
             newErrors.email = "Email is required";
             isValid = false;
-        } else if (!validation(formData.email)) {
+        } else if (!userValidation.validateEmail(formData.email)) {
             newErrors.email = "Invalid email address";
             isValid = false;
         }
@@ -55,7 +58,7 @@ const LoginForm: React.FC = () => {
         if (!formData.password) {
             newErrors.password = "Password is required";
             isValid = false;
-        } else if (!validation(formData.password)) {
+        } else if (!userValidation.validatePassword(formData.password)) {
             newErrors.password = "At least 6 characters, one number, one uppercase, and one lowercase letter"
             isValid = false
         }
@@ -68,6 +71,7 @@ const LoginForm: React.FC = () => {
                 console.log(result)
                 if (result.status) {
                     toast.success("Welcome back, Admin! You are now logged in.")
+                    router.push('/dashboard')
                 } else {
                     toast.error('Invalid login credentials. Please check your email and password.')
                 }
@@ -122,7 +126,7 @@ const LoginForm: React.FC = () => {
 
                     <button
                         type="submit"
-                        className="w-full font-semibold bg-zinc-950 text-zinc-200 py-3 rounded-md hover:bg-zinc-900 transition duration-300"
+                        className="w-full font-semibold cursor-pointer bg-zinc-950 text-zinc-200 py-3 rounded-md hover:bg-zinc-900 transition duration-300"
                     >
                         Login
                     </button>

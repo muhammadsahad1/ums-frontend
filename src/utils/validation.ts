@@ -1,4 +1,4 @@
-export const validation = (data: string) => {
+export const validation = () => {
 
     const validateEmail = (data: string) => {
         return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(data);
@@ -9,5 +9,18 @@ export const validation = (data: string) => {
         return passwordRegex.test(data);
     }
 
-    return { validateEmail, validatePassword }
+
+    const validateFirstName = (data: string) => {
+        return /^[A-Za-z]{2,}$/.test(data);
+    };
+
+    const validateLastName = (data: string) => {
+        return /^[A-Za-z]{2,}$/.test(data);
+    };
+
+    const validatePhoneNumber = (data: string) => {
+        return /^[0-9]{10}$/.test(data);
+    };
+
+    return { validateEmail, validatePassword, validatePhoneNumber, validateLastName, validateFirstName }
 }

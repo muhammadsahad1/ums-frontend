@@ -1,3 +1,26 @@
+export interface IUser {
+    _id: string,
+    firstName: string
+    lastName: string,
+    email: string,
+    phoneNumber: string,
+    role?: string
+}
+
+export interface IUsersResponse {
+    status: boolean;
+    data?: IUser[],
+    pagination?: {
+        totalUsers: number
+        currentPage: number,
+        totalPage: number,
+        pageSize: number
+    }
+    message: string;
+}
+
+
+//
 export interface ILoginData {
     email: string,
     password: string
@@ -52,7 +75,7 @@ export interface IUpdateUser {
 
 export interface IupdateUserResponse {
     status: boolean,
-    data: {
+    data?: {
         firstName: string,
         lastName: string,
         email: string,
@@ -69,6 +92,6 @@ export interface IupdateUserResponse {
 
 // 
 export interface ILoginForm {
-    email : string,
-    password : string,
+    email: string,
+    password: string,
 }
