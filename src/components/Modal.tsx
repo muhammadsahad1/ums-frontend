@@ -9,17 +9,18 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from './ui/button';
-import { IUser } from '@/types/user';
+import { ICreateUser, IUser } from '@/types/user';
 import toast from 'react-hot-toast';
-import { validation } from '@/utils/validation'; // Assuming validation is in utils/validation.ts
+import { validation } from '@/utils/validation';
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     mode: 'create' | 'edit' | 'delete';
     userData?: IUser;
-    onSubmit: (user: IUser) => void;
+    onSubmit: (user: ICreateUser | IUser) => Promise<void> | undefined;
     onDelete: (user: IUser) => void;
+    isLoading?: boolean; // Add loading state here
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -29,22 +30,24 @@ const Modal: React.FC<ModalProps> = ({
     userData,
     onSubmit,
     onDelete,
+    isLoading
 }) => {
-    const [user, setUser] = useState<IUser | null>(null);
+    const [user, setUser] = useState<IUser | ICreateUser | null>(null);
     const [errors, setErrors] = useState<any>({});
 
     const userValidation = validation();
+
     useEffect(() => {
         if (userData) {
             setUser(userData);
+        } else if (mode === 'create') {
+            setUser({ firstName: '', lastName: '', email: '', phoneNumber: '' } as ICreateUser);
         }
-    }, [userData]);
+    }, [userData, mode]);
 
     const handleSubmit = () => {
         if (user) {
             const errorMessages: any = {};
-
-            // Perform validation checks
             if (!user.firstName || !userValidation.validateFirstName(user.firstName)) {
                 errorMessages.firstName = 'First name must be at least 2 characters long and only contain letters.';
             }
@@ -60,11 +63,11 @@ const Modal: React.FC<ModalProps> = ({
 
             if (Object.keys(errorMessages).length > 0) {
                 setErrors(errorMessages);
-                return; // Stop submission if there are errors
-            }
+                return;
+            }          
 
             onSubmit(user);
-            setErrors('');
+            setErrors({});
             onClose();
         }
     };
@@ -81,26 +84,29 @@ const Modal: React.FC<ModalProps> = ({
             if (userData) {
                 setUser(userData);
             } else {
-                setUser(null);
+                setUser(mode === 'create' ? { firstName: '', lastName: '', email: '', phoneNumber: '' } as ICreateUser : null);
             }
         }
         setErrors({});
-    }, [userData, isOpen]);
+    }, [userData, isOpen, mode]);
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold">
-                        {mode === 'edit' ? 'Edit User' : 'Delete User'}
+                        {mode === 'edit' ? 'Edit User' : mode === 'create' ? 'Create User' : 'Delete User'}
                     </DialogTitle>
                     <DialogDescription className="text-sm text-gray-600">
                         {mode === 'edit'
                             ? 'Edit user details below.'
-                            : 'Are you sure you want to delete this user? This action cannot be undone.'}
+                            : mode === 'create'
+                                ? 'Create a new user by filling out the details below.'
+                                : null}
                     </DialogDescription>
                 </DialogHeader>
-                {mode === 'edit' && user && (
+
+                {(mode === 'edit' || mode === 'create') && user && (
                     <div className="space-y-4 mt-4">
                         <div>
                             <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -159,16 +165,27 @@ const Modal: React.FC<ModalProps> = ({
                         </div>
                     </div>
                 )}
+
+                {mode === 'delete' && user && (
+                    <DialogDescription className="text-sm text-gray-600">
+                        Are you sure you want to delete this user? This action cannot be undone.
+                    </DialogDescription>
+                )}
+
                 <DialogFooter className="mt-6">
                     <Button
                         onClick={mode === 'delete' ? handleDelete : handleSubmit}
-                        className={`${mode === "delete" ? "bg-red-600 text-white hover:bg-red-700  transition duration-200`" : "text-whitebg-zinc-900 hover:bg-zinc-850 transition duration-200"}`}
+                        disabled={isLoading}
+                        className={`${mode === 'delete'
+                            ? 'bg-red-600 text-white hover:bg-red-700 transition duration-200'
+                            : 'bg-zinc-900 text-white hover:bg-zinc-850 transition duration-200'
+                            }`}
                     >
-                        {mode === 'delete' ? 'Delete' : 'Save'}
+                        {isLoading ? 'Creating...' : (mode === 'delete' ? 'Delete' : mode === "create" ? "Insert" : "Save")}
                     </Button>
                 </DialogFooter>
             </DialogContent>
-        </Dialog >
+        </Dialog>
     );
 };
 

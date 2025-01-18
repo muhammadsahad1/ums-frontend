@@ -126,13 +126,20 @@ const LoginForm: React.FC = () => {
                         />
                         {errors.password && <p className="text-red-500 text-sm mt-2">{errors.password}</p>}
                     </div>
+                    {isLoading ? (
+                        <div className="flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-600"></div>
+                        </div>
+                    ) : (
+                        <button
+                            type="submit"
+                            className="w-full font-semibold cursor-pointer bg-zinc-950 text-zinc-200 py-3 rounded-md hover:bg-zinc-900 transition duration-300"
+                        >
+                            Login
+                        </button>
+                    )}
 
-                    <button
-                        type="submit"
-                        className="w-full font-semibold cursor-pointer bg-zinc-950 text-zinc-200 py-3 rounded-md hover:bg-zinc-900 transition duration-300"
-                    >
-                        Login
-                    </button>
+
                 </form>
             </div>
         </div>

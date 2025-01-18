@@ -4,15 +4,20 @@ import Navbar from '@/components/Navbar'
 import UserTable from '@/components/UserTable'
 import React from 'react'
 import { withAuth } from '@/hoc/withAuth';
+import AddUser from '@/components/AddUser';
+import Heading from '@/components/Heading';
+import { ProtectRoute } from '@/components/ProtectRoute';
 
 const page: React.FC = () => {
     return (
-        <div>
-            <Navbar />
-            <div className='flex justify-center items-center mt-32'>
+        <ProtectRoute>
+            <div className='flex justify-center mt-32 w-1/2'>
+                <Heading />
+            </div>
+            <div className='flex justify-center items-center'>
                 <UserTable />
             </div>
-        </div>
+        </ProtectRoute>
     )
 }
 

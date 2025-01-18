@@ -19,7 +19,10 @@ export const validation = () => {
     };
 
     const validatePhoneNumber = (data: string) => {
-        return /^[0-9]{10}$/.test(data);
+        const regex = /^[0-9]{10}$/;
+        const isValid = regex.test(data);
+        const isSequential = /^(.)\1{9}$/.test(data);
+        return isValid && !isSequential;
     };
 
     return { validateEmail, validatePassword, validatePhoneNumber, validateLastName, validateFirstName }

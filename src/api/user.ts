@@ -12,9 +12,9 @@ import { userAPI } from "./user/userApi";
 
 // ================================> User API's <============================== //
 
-export const getUsers = async (): Promise<IUsersResponse> => {
+export const getUsers = async (page: number): Promise<IUsersResponse> => {
     try {
-        const response = await axioInstance.get(userAPI.getUsers);
+        const response = await axioInstance.get(`${userAPI.getUsers}/?limit=${5}&page=${page}`);
         console.log("res ==>", response);
         return response.data;
     } catch (error: any) {
@@ -49,6 +49,7 @@ export const createUser = async (
     formdata: ICreateUser
 ): Promise<ICreateUserResponse> => {
     try {
+        console.log("new ", formdata)
         const response = await axioInstance.post(userAPI.createUser, formdata);
         return response.data;
     } catch (error: any) {
@@ -84,7 +85,7 @@ export const updateUser = async (formdata: IUpdateUser): Promise<IupdateUserResp
 
 export const deleteUser = async (user_id: string) => {
     try {
-        const response = await axioInstance.put(`${userAPI.deleteUser}${user_id}`);
+        const response = await axioInstance.post(`${userAPI.deleteUser}${user_id}`);
         return response.data;
     } catch (error: any) {
         console.error("Error in deleteUser:", error);

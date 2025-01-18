@@ -13,6 +13,7 @@ import { deleteUser, getUsers, updateUser } from "@/api/user";
 import { IUser } from "@/types/user";
 import toast from "react-hot-toast";
 import Modal from "./Modal";
+import AddUser from "./AddUser";
 
 // Define valid modes for modal (create, edit, delete)
 type ModalMode = 'create' | 'edit' | 'delete';
@@ -33,7 +34,7 @@ const UserTable: React.FC = () => {
     const fetchUsers = async (page: number) => {
         setLoading(true);
         try {
-            const result = await getUsers();
+            const result = await getUsers(page);
             if (result.status) {
                 setUsers(result?.data);
                 setTotalPages(result?.pagination?.totalPage || 1);
@@ -50,6 +51,7 @@ const UserTable: React.FC = () => {
 
     const handlePagination = (page: number) => {
         setCurrentPage(page);
+        fetchUsers(page)
     };
 
     const toggleDropdown = (user_id: string) => {
@@ -64,7 +66,7 @@ const UserTable: React.FC = () => {
     const handleDelete = async (user: IUser) => {
         setUsers(prevUsers => prevUsers?.filter(prev => prev._id !== user._id));
 
-        const result = await deleteUser(user._id);
+        const result = await deleteUser(user._id as string);
         if (result.status) {
             toast.success(`User ${user.firstName} ${user.lastName} deleted!`, {
                 duration: 4000,
@@ -115,9 +117,26 @@ const UserTable: React.FC = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [dropdownVisibility]);
 
+    // seting new user in usertable 
+    const addNewUser = (newUser: IUser | undefined) => {
+        try {
+            if (newUser) {
+                    setUsers(prevUsers => [...prevUsers || [], newUser]);
+            }
+        } catch (error) {
+            console.error("Error adding new user:", error);
+            toast.error("Failed to add new user.");
+        }
+    }
+    // for handling count of users
+    const getStartIndex = () => {
+        return (currentPage - 1) * 5 + 1
+    }
+
     return (
-        <div className="p-4 space-y-4 w-auto">
-            <Table className="mb-12 border border-zinc-800 rounded-sm">
+        <div className="p-4 w-auto">
+            <AddUser isAdded={addNewUser} />
+            <Table className=" border border-zinc-800 rounded-sm">
                 <TableCaption className="mb-4">List of registered users</TableCaption>
                 <TableHeader>
                     <TableRow>
@@ -142,7 +161,7 @@ const UserTable: React.FC = () => {
                     ) : users && users.length > 0 ? (
                         users.map((user, index) => (
                             <TableRow key={user._id}>
-                                <TableCell className="text-center">{index + 1}</TableCell>
+                                <TableCell className="text-center">{getStartIndex() + index}</TableCell>
                                 <TableCell className="font-mono text-sm">{user._id}</TableCell>
                                 <TableCell>{user.firstName}</TableCell>
                                 <TableCell>{user.lastName}</TableCell>
@@ -151,7 +170,7 @@ const UserTable: React.FC = () => {
                                 <TableCell>
                                     <div className="relative dropdown-container">
                                         <button
-                                            onClick={() => toggleDropdown(user._id)}
+                                            onClick={() => toggleDropdown(user._id as string)}
                                             className="p-2 rounded-full hover:bg-zinc-600 hover:text-white transition-colors duration-200 w-8 h-8 flex items-center justify-center"
                                         >
                                             ⋮
@@ -220,17 +239,23 @@ const UserTable: React.FC = () => {
                 onClose={() => setModalFor("")}
                 mode={modalFor || 'create'}
                 userData={selectedUser}
-                onSubmit={(user: IUser) => {
-                    if (modalFor === "edit") {
-                        handleEdit(user);
-                        setModalFor("");
-                    } else if (modalFor === "delete") {
-                        handleDelete(user);
+                onSubmit={async (user: IUser) => {
+                    try {
+                        if (modalFor === "edit") {
+                            await handleEdit(user);
+                        } else if (modalFor === "delete") {
+                            await handleDelete(user);
+                        }
+                    } catch (error) {
+                        console.error("Error in Modal onSubmit: ", error);
+                    } finally {
                         setModalFor("");
                     }
                 }}
                 onDelete={handleDelete}
+
             />
+
         </div>
     );
 };
