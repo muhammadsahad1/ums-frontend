@@ -4,6 +4,9 @@ import Modal from "./Modal";
 import { ICreateUser, IUser } from "@/types/user";
 import { createUser } from "@/api/user";
 import toast from "react-hot-toast";
+import { setEmpty } from "@/store/adminSlice";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 interface AddUserProps {
     isAdded: (user?: IUser) => void;
@@ -11,7 +14,9 @@ interface AddUserProps {
 
 const AddUser: React.FC<AddUserProps> = ({ isAdded }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Track loading state
+    const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch()
+    const router = useRouter()
 
     const handleCreateUser = async (userData: ICreateUser) => {
         setIsLoading(true);
@@ -24,8 +29,12 @@ const AddUser: React.FC<AddUserProps> = ({ isAdded }) => {
                     duration: 4000,
                     style: { transition: 'all 1s ease' },
                 });
-            } else {
+            } else if (result.message === "Unauthorized, please log in") {
                 toast.error(result.message);
+                dispatch(setEmpty())
+                router.push('/login')
+            } else {
+                toast.error(result.message)
             }
         } catch (error) {
             toast.error('Failed to create user');

@@ -95,3 +95,9 @@ export interface ILoginForm {
     email: string,
     password: string,
 }
+
+export interface ILogoutResponse {
+    message?: string
+    data?: {}
+    status?: boolean
+}

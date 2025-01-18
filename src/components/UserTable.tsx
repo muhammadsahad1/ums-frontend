@@ -14,6 +14,9 @@ import { IUser } from "@/types/user";
 import toast from "react-hot-toast";
 import Modal from "./Modal";
 import AddUser from "./AddUser";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setEmpty } from "@/store/adminSlice";
 
 // Define valid modes for modal (create, edit, delete)
 type ModalMode = 'create' | 'edit' | 'delete';
@@ -26,6 +29,8 @@ const UserTable: React.FC = () => {
     const [dropdownVisibility, setDropdownVisibility] = useState<string | null>(null);
     const [modalFor, setModalFor] = useState<ModalMode | "">("");
     const [selectedUser, setSelectedUser] = useState<IUser | undefined>();
+    const router = useRouter()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         fetchUsers(currentPage);
@@ -38,8 +43,10 @@ const UserTable: React.FC = () => {
             if (result.status) {
                 setUsers(result?.data);
                 setTotalPages(result?.pagination?.totalPage || 1);
-            } else {
+            } else if (result.message === "Unauthorized, please log in") {
                 toast.error(result.message);
+                dispatch(setEmpty())
+                router.push('/login')
             }
         } catch (error) {
             console.error("Error fetching users: ", error);
@@ -96,13 +103,12 @@ const UserTable: React.FC = () => {
                     transition: 'all 1s ease',
                 },
             });
+        } else if (result.message === "Unauthorized, please log in") {
+            toast.error(result.message);
+            dispatch(setEmpty())
+            router.push('/login')
         } else {
-            toast.error(result.message, {
-                duration: 4000,
-                style: {
-                    transition: 'all 1s ease',
-                },
-            });
+            toast.error(result.message)
         }
     };
 
@@ -121,7 +127,7 @@ const UserTable: React.FC = () => {
     const addNewUser = (newUser: IUser | undefined) => {
         try {
             if (newUser) {
-                    setUsers(prevUsers => [...prevUsers || [], newUser]);
+                setUsers(prevUsers => [...prevUsers || [], newUser]);
             }
         } catch (error) {
             console.error("Error adding new user:", error);

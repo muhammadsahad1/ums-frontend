@@ -14,7 +14,7 @@ const Navbar = () => {
     const admin = useSelector((state: RootState) => state.admin);
 
     const handleLogin = () => {
-        router.push("/login"); // Navigate to the login page
+        router.push("/login");
     };
 
     const handleLogout = async () => {
@@ -24,8 +24,12 @@ const Navbar = () => {
                 toast.success("Logged out successfully");
                 dispatch(setEmpty());
                 router.push("/login");
+            } else if (result.message === "Unauthorized, please log in") {
+                toast.error(result.message);
+                dispatch(setEmpty())
+                router.push('/login')
             } else {
-                toast.error("Error logging out");
+                toast.error(result.message)
             }
         } catch (error) {
             console.error("Logout error:", error);
@@ -35,7 +39,7 @@ const Navbar = () => {
 
     return (
         <nav
-            className="flex px-6 py-4 justify-between items-center bg-black/50 shadow-md backdrop-blur-lg  fixed w-full top-0 left-0 z-10"
+            className="flex px-6 py-4 border-b border-zinc-500 border-spacing-4 justify-between items-center bg-black/50 shadow-md backdrop-blur-lg  fixed w-full top-0 left-0 z-10"
             style={{ height: "60px" }}
         >
             <div className="flex justify-between w-full">

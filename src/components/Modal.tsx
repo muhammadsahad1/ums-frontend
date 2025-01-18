@@ -64,7 +64,7 @@ const Modal: React.FC<ModalProps> = ({
             if (Object.keys(errorMessages).length > 0) {
                 setErrors(errorMessages);
                 return;
-            }          
+            }
 
             onSubmit(user);
             setErrors({});

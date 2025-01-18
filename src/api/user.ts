@@ -3,6 +3,7 @@ import {
     ICreateUserResponse,
     ILoginData,
     ILoginResponse,
+    ILogoutResponse,
     IUpdateUser,
     IupdateUserResponse,
     IUsersResponse,
@@ -100,10 +101,10 @@ export const deleteUser = async (user_id: string) => {
 };
 
 
-export const logout = async () => {
+export const logout = async ():Promise<ILogoutResponse> => {
     try {
         const response = await axioInstance.post(userAPI.logout)
-        return response
+        return response.data
     } catch (error: any) {
         console.error("Error in deleteUser:", error);
         const message =
