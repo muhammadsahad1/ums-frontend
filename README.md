@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# User Management System - Frontend
 
-## Getting Started
+This is the frontend implementation of the User Management System built using **Next.js**, **TypeScript**, **Tailwind CSS**, **Redux Toolkit**, and **ShadCN components**. It communicates with the backend API to perform CRUD operations and handle authentication and authorization.
 
-First, run the development server:
+---
 
-```bash
+## Features
+
+- **User Management**:
+  - Create, update, and delete users.
+  - View users with pagination.
+- **Authentication**:
+  - Secure login functionality for the admin.
+  - Token-based session management.
+- **Responsive UI**:
+  - Built with **ShadCN components** for a modern and accessible design.
+- **State Management**:
+  - **Redux Toolkit** for efficient state handling and seamless data flow.
+
+---
+
+## Technologies Used
+
+- **Next.js**: Framework for building React applications with server-side rendering.
+- **TypeScript**: For static type checking.
+- **Tailwind CSS**: For styling and layout.
+- **Redux Toolkit**: For managing application state.
+- **Axios**: For API calls.
+- **ShadCN Components**: For reusable UI components.
+
+---
+
+## Installation and Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/muhammadsahad1/ums-frontend.git
+
+2. Navigate to the project directory:
+    ```bash
+    cd ums-frontend
+
+3. Install dependencies:
+    ```bash
+    npm install
+
+4. Create a .env.local file in the root directory and add the following:
+    ```bash
+    NEXT_PUBLIC_API_BASE_URL=<Backend API URL>
+
+5. Start the development server:
+    ```bash
+    npm run dev
+
+ADMIN Credentials
+    Email: admin@gmail.com
+    Password: Sahad321@
+
+Project Structure
+ums-frontend/
+├── public/              # Static assets (images, fonts, etc.)
+├── src/                 # Main source code
+│   ├── api/             # API services (e.g., Axios setup, API calls)
+│   ├── app/             # Main application configuration (e.g., routing, global state setup)
+│   ├── components/      # Reusable UI components (e.g., buttons, modals, forms)
+│   ├── hoc/             # Higher-order components (e.g., authentication wrappers)
+│   ├── hooks/           # Custom hooks (e.g., useAuth, usePagination)
+│   ├── lib/             # Utility libraries (e.g., helper functions)
+│   ├── store/           # Redux store, slices, and actions
+│   ├── types/           # TypeScript types/interfaces (e.g., user, API responses)
+│   ├── utils/           # Helper functions and utilities (e.g., formatters, validation)
+│   └── styles/          # Global and component-specific styles (Tailwind CSS config, etc.)
+├── .env.local           # Environment variables (e.g., API base URL)
+├── .gitignore           # Git ignore file
+├── next.config.js       # Next.js configuration
+├── package.json         # NPM dependencies and scripts
+├── tailwind.config.js   # Tailwind CSS configuration
+└── tsconfig.json        # TypeScript configuration
+
+
+API Endpoints
+
+Authentication
+POST /api/auth/login - Login admin and generate a token.
+
+User Management
+GET /api/users - Get all users with pagination.
+POST /api/users - Create a new user.
+PUT /api/users/:id - Update an existing user.
+DELETE /api/users/:id - Delete a user.
+
+How to Use
+Start the backend server:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Use the provided admin credentials to authenticate.
+Access user management endpoints via the frontend.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Scripts
+npm run dev - Run the server in development mode.
+npm run start - Start the server in production mode.
