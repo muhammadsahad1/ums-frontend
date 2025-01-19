@@ -13,7 +13,7 @@ export default function Home() {
   const admin = useSelector((state: RootState) => state.admin);
 
   useEffect(() => {
-    if (admin) {
+    if (admin._id) {
       router.push('/dashboard')
     } else {
       setLoading(false);

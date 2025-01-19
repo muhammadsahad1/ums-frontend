@@ -80,14 +80,14 @@ ums-frontend/
 
 API Endpoints
 
-Authentication
-POST /api/auth/login - Login admin and generate a token.
+    Authentication
+    POST /api/auth/admin/login - Login admin and generate a token.
 
-User Management
-GET /api/users - Get all users with pagination.
-POST /api/users - Create a new user.
-PUT /api/users/:id - Update an existing user.
-DELETE /api/users/:id - Delete a user.
+    User Management
+    GET /api/admin/users - Get all users with pagination.
+    POST /api/admin/user - Create a new user.
+    PUT /api/admin/users/:id - Update an existing user.
+    DELETE /api/admin/users/:id - Delete a user.
 
 How to Use
 Start the backend server:
