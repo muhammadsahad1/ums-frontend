@@ -27,7 +27,7 @@ const AddUser = ({ isAdded }: AddUserProps) => {
                 isAdded(result?.data);
                 toast.success('User created successfully!', {
                     duration: 4000,
-                    style: { 
+                    style: {
                         background: '#323232',
                         color: '#fff',
                         borderRadius: '8px',
@@ -41,7 +41,7 @@ const AddUser = ({ isAdded }: AddUserProps) => {
                 router.push('/login');
             } else {
                 toast.error(result.message, {
-                    style: { 
+                    style: {
                         background: '#323232',
                         color: '#fff',
                         borderRadius: '8px',
@@ -51,7 +51,7 @@ const AddUser = ({ isAdded }: AddUserProps) => {
             }
         } catch (error) {
             toast.error('Failed to create user', {
-                style: { 
+                style: {
                     background: '#323232',
                     color: '#fff',
                     borderRadius: '8px',
@@ -73,8 +73,7 @@ const AddUser = ({ isAdded }: AddUserProps) => {
                     disabled={isLoading}
                 >
                     <PlusCircle className="w-4 h-4" />
-                    <span className="hidden sm:inline">Add new user</span>
-                    <span className="sm:hidden">Add user</span>
+                    New
                 </Button>
             </div>
 
@@ -90,7 +89,7 @@ const AddUser = ({ isAdded }: AddUserProps) => {
                         return handleCreateUser(user as ICreateUser);
                     }
                 }}
-                onDelete={() => {}}
+                onDelete={() => { }}
                 isLoading={isLoading}
             />
         </div>

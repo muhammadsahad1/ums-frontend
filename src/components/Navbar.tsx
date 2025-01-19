@@ -61,7 +61,7 @@ const Navbar = () => {
                                 onClick={() => router.push("/")}
                             >
                                 UMS
-                                
+
                             </h1>
                         </div>
 
