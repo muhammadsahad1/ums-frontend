@@ -1,13 +1,11 @@
 "use client"
 
 import React from 'react';
-import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import Image from 'next/image';
 
 const Landing: React.FC = () => {
-    const router = useRouter()
     const admin = useSelector((state: RootState) => state?.admin)
     console.log("admin ==>", admin);
 

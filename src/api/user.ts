@@ -10,6 +10,8 @@ import {
 } from "@/types/user";
 import axioInstance from "@/utils/api";
 import { userAPI } from "./user/userApi";
+import { clearTokens, getTokens, setTokens } from "@/utils/tokenManagement";
+import { IRefreshResponse } from "@/types/Token";
 
 // ================================> User API's <============================== //
 
@@ -33,6 +35,11 @@ export const getUsers = async (page: number): Promise<IUsersResponse> => {
 export const login = async (formdata: ILoginData): Promise<ILoginResponse> => {
     try {
         const response = await axioInstance.post(userAPI.login, formdata);
+        const { tokens } = response.data
+
+        // here setup the tokens in localstorage
+        setTokens(tokens)
+
         return response.data;
     } catch (error: any) {
         console.error("Error in login:", error);
@@ -101,7 +108,7 @@ export const deleteUser = async (user_id: string) => {
 };
 
 
-export const logout = async ():Promise<ILogoutResponse> => {
+export const logout = async (): Promise<ILogoutResponse> => {
     try {
         const response = await axioInstance.post(userAPI.logout)
         return response.data
@@ -114,5 +121,23 @@ export const logout = async ():Promise<ILogoutResponse> => {
             status: false,
             message,
         };
+    }
+}
+
+// refresh function 
+export const refreshToken = async (): Promise<string | undefined> => {
+    try {
+        const tokens = getTokens()
+
+        if (!tokens?.refresh_token) throw new Error("No refresh token available")
+
+        const response = await axioInstance.post<IRefreshResponse>(userAPI.refresh, { refresh_token: refreshToken })
+
+        setTokens(response.data.tokens)
+        return response.data.tokens.access_token
+
+    } catch (error) {
+        clearTokens()
+        throw error
     }
 }

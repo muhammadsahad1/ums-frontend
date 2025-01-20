@@ -28,6 +28,7 @@ const UserTable = () => {
     const [dropdownVisibility, setDropdownVisibility] = useState<string | null>(null);
     const [modalFor, setModalFor] = useState<ModalMode | "">("");
     const [selectedUser, setSelectedUser] = useState<IUser | undefined>();
+
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -49,7 +50,9 @@ const UserTable = () => {
             }
         } catch (error) {
             toast.error("Unable to fetch users. Please try again later.");
-        } finally {
+        }
+
+        finally {
             setLoading(false);
         }
     };
@@ -70,21 +73,35 @@ const UserTable = () => {
     };
 
     const handleDelete = async (user: IUser) => {
+
         setUsers(prevUsers => prevUsers?.filter(prev => prev._id !== user._id));
         const result = await deleteUser(user._id as string);
+
         if (result.status) {
+
             toast.success(`User ${user.firstName} ${user.lastName} deleted!`);
+
         } else {
             toast.error(result.message);
         }
     };
 
     const handleEdit = async (updatedUser: IUser) => {
+
         setUsers(prevUsers => prevUsers?.map(user =>
+
             user._id === updatedUser._id ? { ...user, ...updatedUser } : user));
+
         const result = await updateUser(updatedUser);
         if (result.status) {
-            toast.success(`User ${updatedUser.firstName}'s details updated successfully!`);
+            toast.success(`User ${updatedUser.firstName}'s details updated successfully!`, {
+                style: {
+                    background: '#323232',
+                    color: '#fff',
+                    borderRadius: '8px',
+                    border: '1px solid #404040'
+                }
+            });
         } else if (result.message === "Unauthorized, please log in") {
             toast.error(result.message);
             dispatch(setEmpty());

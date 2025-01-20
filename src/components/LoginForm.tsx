@@ -121,7 +121,7 @@ const LoginForm = () => {
                         <h2 className="text-2xl font-bold mb-8 text-zinc-100 text-center">
                             Admin Login
                         </h2>
-                        
+
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-zinc-300">
